@@ -1,24 +1,40 @@
-# PMP Checker
+# Challenge
 
-This is a simple Python script that simulates a RISC-V Physical Memory Protection (PMP) check. It reads a PMP configuration from a text file and then checks whether a given physical address would be allowed for a specified privilege mode and access type.
+Create a program in a language of your choice that implements a Physical Memory Protection (PMP) check according to Chapter 3.7 of the RISC-V privleged manual (https://drive.google.com/file/d/17GeetSnT5wW3xNuAHI95-SI1gPGd5sJ_/view).
+It must:
 
-## Overview
+1. Accept four command line arguments:
+    1. The path to a file containing a PMP configuration.
+    2. A physical address in hexadecimal, with a leading '0x'.
+    3. A privilege mode (one of 'M', 'S', or 'U').
+    4. An operation (one of 'R' (read), 'W' (write), or 'X' (execute/fetch).
+2. For the given physical address and privilege mode, print whether or not the address would cause an access fault.
 
-- **PMP Configuration:** The config file contains 128 lines. The first 64 lines are configuration bytes - one per PMP entry that define permissions (read, write, execute), address matching mode (TOR, NA4, or NAPOT), and whether the entry is locked. The next 64 lines are the corresponding PMP address registers.
-- **Access Check:** The script goes through each active PMP entry, computes the effective address range, and then determines if the given physical address falls into one of these regions. If it does, the appropriate permission is checked.
-- **Privilege Modes:** Machine mode (`M`) typically bypasses PMP checks unless the entry is locked. Supervisor (`S`) and User (`U`) modes follow the PMP rules strictly.
+The PMP configuration file will be a text file with 128 lines. The first 64 lines will contain the contents of pmpNcfg (for N = 0..63) as a hexadecimal integer. (NOTE: *not* pmpcfgN)
+The last 64 lines will contain the contents of pmpaddrN (for N = 0..63).
 
-## Files
+Example invocation:
 
-- **pmp_check.py:** The main script that reads the configuration file, parses the command-line arguments, and prints whether the access is allowed or not.
-- **pmp_config.txt:** A sample configuration file. In this sample, only the first PMP entry is active (using TOR mode with read enabled), while the other entries are disabled.
+```
+program pmp_configuration.txt 0xdeadbeef M R
+```
 
+Example configuration file:
 
-## Example Usage
+```
+0x0
+0x1
+(... 62 more lines)
+0x8000000
+0x100000000
+(... 62 more lines)
+```
 
-   ```./pmp_check.py pmp_config.txt 0x3000 S R ```
+# Submission
 
-   Output : 
+To submit your entry, create a Pull Request against this repository (https://github.com/dhower-qc/idl-programming-challenge.git) that:
 
-   ``` Access Allowed ```
+- Contains your submission in a new directory under `submissions` named after your GitHub username. For example, `submissions/dhower-qc`.
+- Contains instructions on how to build your program, if needed (i.e., if using a compiled language).
 
+You will need to create a fork of this repository. See https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork for more information.
